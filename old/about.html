@@ -1,139 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>First Lesson</title>
-  <style>
-body {
-  background: linear-gradient(135deg, #e0f7fa, #fce4ec);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  min-height: 100vh;
-  margin: 0;
-  padding: 20px;
-  animation: fadeIn 1s ease-in-out;
-}
-
-/* Fade-in animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-
-    h1 {
-      margin-bottom: 20px;
-      color: #333;
-      font-size: 2rem;
-    }
-
-    .video-container {
-      position: relative;
-      width: 100%;
-      max-width: 720px;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #fff;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    video {
-      width: 100%;
-      display: block;
-    }
-
-    .custom-controls {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      right: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 10px 15px;
-      border-radius: 8px;
-      backdrop-filter: blur(6px);
-    }
-
-    .custom-controls button {
-      background-color: #4CAF50;
-      border: none;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 6px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-
-    .custom-controls button:hover {
-      background-color: #45a049;
-    }
-
-    .progress {
-      flex-grow: 1;
-      height: 8px;
-      margin: 0 12px;
-      background: #ddd;
-      border-radius: 6px;
-      overflow: hidden;
-      cursor: pointer;
-    }
-
-    .progress-filled {
-      height: 100%;
-      width: 0%;
-      background-color: #4CAF50;
-      transition: width 0.2s ease;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>🎥 1. How to download and install Python on PC</h1>
-
-  <div class="video-container">
-    <video id="myVideo" src="1. How to download and install Python.mp4" preload="metadata"></video>
-
-    <div class="custom-controls">
-      <button onclick="togglePlay()">▶️ / ⏸️</button>
-      <div class="progress" onclick="seek(event)">
-        <div class="progress-filled" id="progressBar"></div>
-      </div>
-      <button onclick="restart()">🔄</button>
-    </div>
-  </div>
-
-  <script>
-    const video = document.getElementById("myVideo");
-    const progressBar = document.getElementById("progressBar");
-
-    function togglePlay() {
-      video.paused ? video.play() : video.pause();
-    }
-
-    function restart() {
-      video.currentTime = 0;
-      video.play();
-    }
-
-    video.addEventListener("timeupdate", () => {
-      const percent = (video.currentTime / video.duration) * 100;
-      progressBar.style.width = percent + "%";
-    });
-
-    function seek(e) {
-      const progress = e.currentTarget;
-      const clickX = e.offsetX;
-      const width = progress.offsetWidth;
-      video.currentTime = (clickX / width) * video.duration;
-    }
-  </script>
-
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>First Lesson</title>
+        <link rel="stylesheet" href="./css/about.css">
+    </head>
+    <body>
+        <h1>🎥 1. How to download and install Python on PC</h1>
+        <div class="video-container">
+            <video id="myVideo" src="1. How to download and install Python.mp4" preload="metadata"></video>
+            <div class="custom-controls">
+                <button onclick="togglePlay()">▶️ / ⏸️</button>
+                <div class="progress" onclick="seek(event)">
+                    <div class="progress-filled" id="progressBar"></div>
+                </div>
+                <button onclick="restart()">🔄</button>
+            </div>
+        </div>
+        <script src="./about.js"></script>
+    </body>
 </html>

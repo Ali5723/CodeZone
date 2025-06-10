@@ -1,0 +1,11 @@
+.about a {
+  text-decoration: none;
+  font-size: 19px;
+  color: #2196f3;
+  font-weight: bold;
+  transition: font-size .5s;
+}
+
+.about a:hover {
+font-size: 22px;
+}

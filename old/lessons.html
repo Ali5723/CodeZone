@@ -1,189 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login Page</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      transition: background 0.6s ease;
-    }
-
-    .login-container,
-    .lesson-container {
-      background: white;
-      padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-      text-align: center;
-      max-width: 360px;
-      width: 100%;
-      display: none;
-    }
-
-    .login-container.active,
-    .lesson-container.active {
-      display: block;
-    }
-
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    input[type="password"] {
-      padding: 10px;
-      width: 100%;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-
-    button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    iframe {
-      width: 100%;
-      height: 240px;
-      border: none;
-      border-radius: 10px;
-      margin-top: 20px;
-    }
-
-    .locked {
-      opacity: 0.5;
-      pointer-events: none;
-    }
-
-    #countdown {
-      font-size: 0.9rem;
-      margin-top: 10px;
-      color: #ff5722;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- login form -->
-  <div class="login-container active" id="loginBox">
-    <h2>ادخل كلمة السر عشان تشوف الدروس 🔐</h2>
-    <input type="password" id="passwordInput" placeholder="كلمة السر" />
-    <br />
-    <button onclick="checkPassword()">دخول</button>
-  </div>
-
-  <!-- lessons container -->
-  <div class="lesson-container" id="lessonBox">
-    <h2>📚 دروس البرمجة</h2>
-
-    <!-- Lesson 1 -->
-    <div id="lesson1">
-      <p><strong>✅ درس 1: تثبيت بايثون</strong></p>
-      <iframe src="https://drive.google.com/file/d/1QBkaUNnUPp3nAuLOL33XSSOpok8JRAoq/preview" allow="autoplay"></iframe>
-      <br>
-      <button onclick="finishLesson1()">✔️ خلصت الدرس</button>
-    </div>
-
-    <!-- Lesson 2 (locked initially) -->
-    <div id="lesson2" class="locked">
-      <p><strong>✅ درس 2: أول كود ليك</strong></p>
-      <iframe src="https://drive.google.com/file/d/1D6KQ9ouXvsW7noO6WsC8TNjvpwYXDBQh/preview" allow="autoplay"></iframe>
-      <div id="countdown"></div>
-    </div>
-  </div>
-
-  <script>
-    function checkPassword() {
-      const password = document.getElementById("passwordInput").value;
-      const correctPassword = "1234";
-
-      if (password === correctPassword) {
-        document.getElementById("loginBox").classList.remove("active");
-        document.getElementById("lessonBox").classList.add("active");
-        document.body.style.background = "linear-gradient(135deg, #fdfbfb, #ebedee)";
-
-        const lesson2Time = localStorage.getItem("lesson2_unlock_time");
-        if (lesson2Time) {
-          const now = new Date().getTime();
-          const timeLeft = Number(lesson2Time) - now;
-
-          if (timeLeft <= 0) {
-            unlockLesson2();
-          } else {
-            startCountdown(timeLeft);
-          }
-        }
-      } else {
-        alert("❌ كلمة السر غلط! جرّب تاني يا بطل.");
-      }
-    }
-
-    function finishLesson1() {
-      const now = new Date();
-      let unlockTime = new Date(now);
-
-      if (now.getHours() < 20) {
-        unlockTime.setHours(20, 0, 0, 0); // النهاردة الساعة 8 بالليل
-      } else {
-        unlockTime.setDate(unlockTime.getDate() + 1);
-        unlockTime.setHours(20, 0, 0, 0); // بكرة الساعة 8 بالليل
-      }
-
-      localStorage.setItem("lesson2_unlock_time", unlockTime.getTime());
-
-      alert("✅ تمام! الدرس التاني هيفتح الساعة 8 بالليل إن شاء الله.");
-      startCountdown(unlockTime.getTime() - now.getTime());
-    }
-
-    function unlockLesson2() {
-      const lesson2 = document.getElementById("lesson2");
-      lesson2.classList.remove("locked");
-      document.getElementById("countdown").style.display = "none";
-    }
-
-    function startCountdown(ms) {
-      const countdown = document.getElementById("countdown");
-      countdown.style.display = "block";
-
-      const interval = setInterval(() => {
-        const now = new Date().getTime();
-        const target = Number(localStorage.getItem("lesson2_unlock_time"));
-        const distance = target - now;
-
-        if (distance <= 0) {
-          clearInterval(interval);
-          unlockLesson2();
-          return;
-        }
-
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        countdown.innerHTML = `⏳ فاضل ${hours} ساعة و ${minutes} دقيقة و ${seconds} ثانية على فتح الدرس التاني`;
-      }, 1000);
-    }
-  </script>
-
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Login Page</title>
+        <link rel="stylesheet" href="./css/lessons.css">
+    </head>
+    <body>
+        <!-- login form -->
+        <div class="login-container active" id="loginBox">
+            <h2>ادخل كلمة السر عشان تشوف الدروس 🔐</h2>
+            <input type="password" id="passwordInput" placeholder="كلمة السر">
+            <br>
+            <button onclick="checkPassword()">دخول</button>
+        </div>
+        <!-- lessons container -->
+        <div class="lesson-container" id="lessonBox">
+            <h2>📚 دروس البرمجة</h2>
+            <!-- Lesson 1 -->
+            <div id="lesson1">
+                <p>
+                    <strong>✅ درس 1: تثبيت بايثون</strong>
+                </p>
+                <iframe src="https://drive.google.com/file/d/1QBkaUNnUPp3nAuLOL33XSSOpok8JRAoq/preview" allow="autoplay"></iframe>
+                <br>
+                <button onclick="finishLesson1()">✔️ خلصت الدرس</button>
+            </div>
+            <!-- Lesson 2 (locked initially) -->
+            <div id="lesson2" class="locked">
+                <p>
+                    <strong>✅ درس 2: أول كود ليك</strong>
+                </p>
+                <iframe src="https://drive.google.com/file/d/1D6KQ9ouXvsW7noO6WsC8TNjvpwYXDBQh/preview" allow="autoplay"></iframe>
+                <div id="countdown"></div>
+            </div>
+        </div>
+        <script src="./lessons.js"></script>
+    </body>
 </html>
